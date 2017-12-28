@@ -115,8 +115,7 @@ uint32_t nn::fssrv::sf::IFileSystemProxy::OpenDataStorageByApplicationId(IN nn::
 
 uint32_t nn::fssrv::sf::IFileSystemProxy::OpenDataStorageByCurrentProcess(OUT shared_ptr<nn::fssrv::sf::IStorage>& dataStorage) {
 	LOG_DEBUG(Fsp, "Stub implementation for nn::fssrv::sf::IFileSystemProxy::OpenDataStorageByCurrentProcess");
-	LOG_ERROR(Fsp, "UNIMPLEMENTED!!!");
-	dataStorage = buildInterface(nn::fssrv::sf::IStorage, "");
+	dataStorage = buildInterface(nn::fssrv::sf::IStorage, "DataStorageCurrentProcess.istorage");
 	return 0;
 }
 

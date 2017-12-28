@@ -1,8 +1,14 @@
 interface NvidiaService is nvdrv, nvdrv:a, nvdrv:s, nvdrv:t {
-	[0] Open(buffer<i8, 5, 0> path) -> u32 fd;
-	[1] Ioctl(u32 fd, u32 request, buffer<unknown, 0x21, 0> inbuf) -> buffer<unknown, 0x22, 0> outbuf;
-	[2] Close(u32 fd);
-	[3] Initialize(u32 tmemSize, KObject process, KObject transferMemory);
+	[0] Open(buffer<i8, 5, 0> path) -> (u32 fd, u32 error_code);
+	[1] Ioctl(u32 fd, u32 request, buffer<unknown, 0x21, 0> inbuf) -> (buffer<unknown, 0x22, 0> outbuf, u32 error_code);
+	[2] Close(u32 fd) -> u32 error_code;
+	[3] Initialize(u32 tmemSize, KObject process, KObject transferMemory) -> u32 error_code;
+	[4] QueryEvent(u32 fd, u32 event_id) -> (u32 error_code, KObject event);
+	[5] MapSharedMem(u32 fd, u32 nvmap_handle, KObject transfer_memory) -> u32 error_code;
+	[6] GetStatus() -> (bytes<0x10>, u32 error_code);
+	[7] ForceSetClientPID(u64 pid) -> u32 error_code;
+	[8] SetClientPID(u64 pid, pid) -> u32 error_code;
+	[9] DumpGraphicsMemoryInfo();
 }
 
 interface NvidiaDebugger is nvdrvdbg {

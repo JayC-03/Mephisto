@@ -20,3 +20,9 @@ uint32_t nn::settings::IFactorySettingsServer::GetConfigurationId1(OUT nn::setti
 	strcpy((char *) _0, "MP_00_01_00_00");
 	return 0;
 }
+
+uint32_t nn::settings::ISettingsServer::GetAvailableLanguageCodes(OUT int32_t& _0, OUT nn::settings::LanguageCode * _1, guint _1_size) {
+	_0 = _1_size;
+	memset(_1, 0, _1_size);
+	return 0;
+}

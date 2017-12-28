@@ -94,6 +94,7 @@ Svc::Svc(Ctu *_ctu) : ctu(_ctu) {
 	registerSvc(              0x1B, UnlockMutex, IX0);
 	registerSvc_ret_X0(       0x1C, WaitProcessWideKeyAtomic, IX0, IX1, (ghandle) IX2, IX3);
 	registerSvc_ret_X0(       0x1D, SignalProcessWideKey, IX0, IX1);
+	registerSvc_ret_X0(       0x1E, GetSystemTick);
 	registerSvc_ret_X0_X1(    0x1F, ConnectToPort, IX1);
 	registerSvc_ret_X0(       0x21, SendSyncRequest, (ghandle) IX0);
 	registerSvc_ret_X0(       0x22, SendSyncRequestEx, IX0, IX1, (ghandle) IX2);
@@ -253,7 +254,8 @@ guint Svc::GetCurrentProcessorNumber(guint tmp) {
 
 guint Svc::SignalEvent(ghandle handle) {
 	LOG_DEBUG(Svc[0x11], "SignalEvent 0x%x", handle);
-	UNIMPLEMENTED(0x11);
+	auto hnd = ctu->getHandle<Waitable>(handle);
+	hnd->signal(0);
 	return 0;
 }
 
@@ -287,7 +289,6 @@ guint Svc::CloseHandle(ghandle handle) {
 
 guint Svc::ResetSignal(ghandle handle) {
 	LOG_DEBUG(Svc[0x17], "ResetSignal 0x%x", handle);
-	UNIMPLEMENTED(0x17);
 	return 0;
 }
 
@@ -429,6 +430,11 @@ guint Svc::SignalProcessWideKey(gptr semaAddr, guint target) {
 	return 0;
 }
 
+guint Svc::GetSystemTick() {
+	LOG_DEBUG(Svc[0x1E], "GetSystemTick");
+	return 0;
+}
+
 tuple<guint, ghandle> Svc::ConnectToPort(guint name) {
 	LOG_DEBUG(Svc[0x1F], "ConnectToPort");
 	return make_tuple(0, ctu->ipc.ConnectToPort(ctu->cpu.readstring(name)));
@@ -506,12 +512,12 @@ tuple<guint, guint> Svc::GetInfo(guint id1, ghandle handle, guint id2) {
 	LOG_DEBUG(Svc[0x29], "GetInfo handle=0x%x id1=0x" LONGFMT " id2=" LONGFMT, handle, id1, id2);
 	matchpair(0, 0, 0xF);
 	matchpair(1, 0, 0xFFFFFFFF00000000);
-	matchpair(2, 0, 0x7100000000);
-	matchpair(3, 0, 0x1000000000);
+	matchpair(2, 0, 0x21000000);
+	matchpair(3, 0, 0x10000000);
 	matchpair(4, 0, 0xaa0000000);
 	matchpair(5, 0, ctu->heapsize); // Heap region size
-	matchpair(6, 0, 0x400000);
-	matchpair(7, 0, 0x10000);
+	matchpair(6, 0, /*0x400000*/0xcd500000);
+	matchpair(7, 0, /*0x10000*/0x5c9000);
 	matchpair(12, 0, 0x8000000);
 	matchpair(13, 0, 0x7ff8000000);
 	matchpair(14, 0, ctu->loadbase);
