@@ -1,0 +1,3 @@
+interface nn::spl::spl is spl: {
+	[0] GetConfig(u32) -> u64;
+}
